@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GTKMMPLPLOTCANVAS_H
 #define GTKMMPLPLOTCANVAS_H
 
+#include <gtkmm/builder.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm-plplot/plot.h>
 #include <vector>
@@ -157,6 +158,26 @@ namespace Gtk {
        * \param background_color The color of the background for the canvas.
        */
       Canvas(Plot &plot, Gdk::RGBA background_color = Gdk::RGBA("White"));
+
+      /** Canvas constructor
+       *
+       * This is a Canvas constructor used with Gtk::Builder. It produces only a widget with the \c background_color specified.
+       * Add plots using add_plot.
+       * \param background_color The color of the background for the canvas.
+       * \exception Gtk::PLplot::Exception
+       */
+      Canvas(_GtkDrawingArea* baseObject, const Glib::RefPtr<Gtk::Builder>& builder, Gdk::RGBA background_color = Gdk::RGBA("White"));
+
+      /** Canvas constructor
+       *
+       * This is a Canvas constructor used with Gtk::Builder. It therefore takes a reference to the base object (Gtk::DrawingArea)
+       * and a reference to a Gtk::Builder object additionally to a plot as arguments. When shown, box with data is displayed.
+       * More plots may be added using add_plot.
+       * More plots may be added using add_plot.
+       * \param plot The initial plot that will be added to the canvas.
+       * \param background_color The color of the background for the canvas.
+       */
+      Canvas(_GtkDrawingArea* baseObject, const Glib::RefPtr<Gtk::Builder>& builder, Plot &plot, Gdk::RGBA background_color = Gdk::RGBA("White"));
 
       /** Canvas destructor
        *

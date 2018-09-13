@@ -35,6 +35,40 @@ Canvas::Canvas(Plot &plot, Gdk::RGBA _background_color) :
   add_plot(plot);
 }
 
+Canvas::Canvas(_GtkDrawingArea* baseObject, const Glib::RefPtr<Gtk::Builder>& builder, Plot &plot, Gdk::RGBA _background_color) :
+  Canvas(baseObject, builder, _background_color) {
+
+  add_plot(plot);
+}
+
+Canvas::Canvas(_GtkDrawingArea* baseObject, const Glib::RefPtr<Gtk::Builder>& builder, Gdk::RGBA _background_color) : 
+  Gtk::DrawingArea(baseObject),
+  Glib::ObjectBase("GtkmmPLplotCanvas"),
+  start_event{-1.0, -1.0},
+  start_cairo{-1.0, -1.0},
+  end_event{-1.0, -1.0},
+  end_cairo{-1.0, -1.0},
+  selecting(false),
+  left_mouse_button_clicked(false),
+  shift_pressed(false),
+  selected_plot(nullptr),
+  inside_plot(nullptr),
+  inside_plot_current_coords{0.0, 0.0},
+  background_color(_background_color) {
+
+  add_events(Gdk::POINTER_MOTION_MASK |
+             Gdk::BUTTON_PRESS_MASK |
+             Gdk::BUTTON_RELEASE_MASK |
+             Gdk::SCROLL_MASK |
+             Gdk::KEY_PRESS_MASK |
+             Gdk::KEY_RELEASE_MASK
+           );
+
+  set_can_focus(true);
+
+  signal_changed().connect(sigc::mem_fun(*this, &Canvas::on_changed));
+}
+
 Canvas::Canvas(Gdk::RGBA _background_color) :
   Glib::ObjectBase("GtkmmPLplotCanvas"),
   start_event{-1.0, -1.0},
